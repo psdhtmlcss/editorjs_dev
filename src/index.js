@@ -27,7 +27,10 @@ const editor = new EditorJS({
       }
     },
     embed: Embed,
-    image: SimpleImage
+    image: {
+      class: SimpleImage,
+      inlineToolbar: ['link']
+    }
   },
   data: {
     time: 1552744582955,
@@ -35,7 +38,11 @@ const editor = new EditorJS({
       {
         type: "image",
         data: {
-          url: "https://cdn.stocksnap.io/img-thumbs/960w/abstract-background_VCJK4NBK4W.jpg"
+          url: "https://cdn.stocksnap.io/img-thumbs/960w/abstract-background_VCJK4NBK4W.jpg",
+          caption: "Some image",
+          withBorder: false,
+          withBorderRadius: true,
+          stretched: true
         }
       }
     ],
