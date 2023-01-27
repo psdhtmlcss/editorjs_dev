@@ -84,7 +84,8 @@ export default class SimpleImage {
     this.settings.forEach(tune => {
       let button = document.createElement('div');
 
-      button.classList.add('cdx-settings-button');
+      button.classList.add(this.api.styles.settingsButton);
+      button.classList.toggle(this.api.styles.settingsButtonActive, this.data[tune.name]);
       button.innerHTML = tune.icon;
       wrapper.append(button);
 
