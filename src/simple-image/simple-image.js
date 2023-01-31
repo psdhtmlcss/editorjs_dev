@@ -31,7 +31,7 @@ export default class SimpleImage {
   static get toolbox() {
     return {
       title: 'Image',
-      icon: `<svg width="17" height="15" viewBox="0 0 336 276" xmlns="http://www.w3.org/2000/svg"><path d="M291 150V79c0-19-15-34-34-34H79c-19 0-34 15-34 34v42l67-44 81 72 56-29 42 30zm0 52l-43-30-56 30-81-67-66 39v23c0 19 15 34 34 34h178c17 0 31-13 34-29zM79 0h178c44 0 79 35 79 79v118c0 44-35 79-79 79H79c-44 0-79-35-79-79V79C0 35 35 0 79 0z"/></svg>`
+      icon: `<svg xmlns="http://www.w3.org/2000/svg" height="20" width="20"><path d="M5.021 16.167q-.521 0-.854-.344-.334-.344-.334-.844V5.021q0-.5.334-.844.333-.344.854-.344h9.958q.521 0 .854.344.334.344.334.844v9.958q0 .5-.334.844-.333.344-.854.344Zm0-.667h9.958q.209 0 .365-.156t.156-.365V5.021q0-.209-.156-.365t-.365-.156H5.021q-.209 0-.365.156t-.156.365v9.958q0 .209.156.365t.365.156Zm1.729-1.917h6.625l-2.229-2.979-1.938 2.438-1.083-1.271ZM4.5 15.5V4.5 15.5Z"/></svg>`
     }
   }
 
@@ -135,8 +135,10 @@ export default class SimpleImage {
 
   _acceptTuneView() {
     const img = this.wrapper.querySelector('img');
+    console.log(this.api.blocks.getCurrentBlockIndex());
     this.settings.forEach(tune => {
       img.classList.toggle(tune.className, !!this.data[tune.name]);
+
 
       if (tune.name === 'stretched') {
         this.api.blocks.stretchBlock(this.api.blocks.getCurrentBlockIndex(), !!this.data.stretched);

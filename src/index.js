@@ -4,6 +4,7 @@ import Header from '@editorjs/header';
 import List from '@editorjs/list';
 import Embed from '@editorjs/embed';
 import SimpleImage from './simple-image/simple-image.js';
+import Tabs from './tabs/tabs.js';
 
 const saveButton = document.querySelector('button');
 
@@ -30,27 +31,37 @@ const editor = new EditorJS({
     image: {
       class: SimpleImage,
       inlineToolbar: ['link']
-    }
+    },
+    tabs: Tabs,
   },
   data: {
     time: 1552744582955,
     blocks: [
       {
-        type: "image",
+        type: "tabs",
         data: {
-          url: "https://cdn.stocksnap.io/img-thumbs/960w/abstract-background_VCJK4NBK4W.jpg",
-          caption: "Some image",
-          withBorder: false,
-          withBorderRadius: true,
-          stretched: true
+          tabNames: ['Tab one', 'Tab two', 'Tab three'],
+          tabsContent: [
+            'Tab content one',
+            'Tab content two',
+            'Tab content three'
+          ]
         }
-      }
+      },
+      // {
+      //   type: "image",
+      //   data: {
+      //     url: "https://cdn.stocksnap.io/img-thumbs/960w/abstract-background_VCJK4NBK4W.jpg",
+      //     caption: "Some image",
+      //     withBorder: false,
+      //     withBorderRadius: true,
+      //     stretched: false
+      //   }
+      // },
     ],
     version: "2.11.10"
   }
 });
-
-
 
 const onSaveButtonClick = (evt) => {
   evt.preventDefault();
