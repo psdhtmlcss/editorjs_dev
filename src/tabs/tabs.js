@@ -1,5 +1,7 @@
 import { Icon, editButtonSetting } from './const';
 import * as t from './createTemplates';
+import { nanoid } from 'nanoid';
+import { tabValidate } from './validate';
 
 export default class Tabs {
   constructor({ data, api }) {
@@ -15,7 +17,8 @@ export default class Tabs {
     this._createInputs = this._createInputs.bind(this);
     this._showEditBlock = this._showEditBlock.bind(this);
     this._hideTabs = this._hideTabs.bind(this);
-    this.id = 'tab654654';
+    this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
+    this.id = nanoid();
   }
   // Отрисовка кнопки в меню
   static get toolbox() {
@@ -39,6 +42,7 @@ export default class Tabs {
 
   // Отрисовка полей для нового контента
   render() {
+    console.log('render');
     this.wrapper = t.createBlockWrapperTemplate();
     this.editBlock = t.createEditBlockWrapperTemplate();
     this.addTabButton = t.createAddTabButtonTemplate();
@@ -54,6 +58,12 @@ export default class Tabs {
       this.editBlock.classList.add('d-none');
       this.wrapper.append(this.editBlock);
       this.wrapper.append(this.addTabButton);
+      if (this._checkTabsCount()) {
+        this._setHandlers();
+      } else {
+        this.editBlock.querySelector('.btn-delete-tab').disabled = true;
+      }
+      
       return this.wrapper;
     }
 
@@ -68,6 +78,7 @@ export default class Tabs {
 
   // Сохранение данных
   save(blockContent) {
+    console.log(blockContent);
     const inputs = Array.from(blockContent.querySelectorAll('input'));
     const textareas = Array.from(blockContent.querySelectorAll('textarea'));
     const tabNames = [];
@@ -85,6 +96,14 @@ export default class Tabs {
       tabNames: tabNames,
       tabsContent: tabsContent
     })
+  }
+
+  validate(savedData){
+    if (tabValidate(savedData.tabNames) && tabValidate(savedData.tabsContent)) {
+      return true;
+    }
+    
+    return false;
   }
 
   _createTabs() {
@@ -109,6 +128,11 @@ export default class Tabs {
     const inputs = t.createInputsTemplate(this.count);
     this.editBlock.insertAdjacentHTML('beforeend', inputs);
     this.count = this.count + 1;
+    if (this._checkTabsCount()) {
+      this._setHandlers();
+    } else {
+      this.editBlock.querySelector('.btn-delete-tab').disabled = true;
+    }
   }
 
   _showEditBlock() {
@@ -121,5 +145,38 @@ export default class Tabs {
   _hideTabs() {
     this.wrapper.querySelector('.nav-tabs').classList.add('d-none');
     this.wrapper.querySelector('.tab-content').classList.add('d-none');
+  }
+
+  _setHandlers() {
+    const buttons = Array.from(this.wrapper.querySelectorAll('.btn-delete-tab'));
+    buttons.forEach((button) => {
+      button.disabled = false;
+      button.addEventListener('click', this._onDeleteButtonClick);
+    })
+  }
+
+  _onDeleteButtonClick(evt) {
+    evt.preventDefault();
+    this.count = 1;
+    this.editBlock.innerHTML = '';
+    // Нужно отдельно хранить данные для новых блоков.
+    this.data.tabNames.splice(evt.target.dataset.index, 1);
+    this.data.tabsContent.splice(evt.target.dataset.index, 1);
+    console.log('after delete click', this.data);
+    this.data.tabNames.forEach((item, index) => {
+      const inputs = t.createInputsTemplate(this.count, item, this.data.tabsContent[index]);
+      this.editBlock.insertAdjacentHTML('beforeend', inputs);
+      this.count = this.count + 1;
+    })
+    if (this._checkTabsCount()) {
+      this._setHandlers();
+    } else {
+      this.editBlock.querySelector('.btn-delete-tab').disabled = true;
+    }
+  }
+
+  _checkTabsCount() {
+    const tabsCount = this.editBlock.querySelectorAll('.tab-edit-block');
+    return tabsCount.length > 1 ? true : false;
   }
 }

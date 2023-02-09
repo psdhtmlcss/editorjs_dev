@@ -1,3 +1,5 @@
+import { Icon } from './const';
+
 export const createBlockSettingsButtonTemplate = (icon, label, className) => (
   `<div class="ce-popover__item btn-${className}">
       <div class="ce-popover__item-icon">${icon}</div>
@@ -6,11 +8,14 @@ export const createBlockSettingsButtonTemplate = (icon, label, className) => (
 );
 
 export const createInputsTemplate = (count, name = '', content = '') => (
-  `<div class="mb-3">
+  `<div class="tab-edit-block mb-3">
     <h4>Tab ${count}</h4>
     <div class="mb-3">
       <label class="form-label">Tab name</label>
-      <input type="text" class="form-control" placeholder="Enter the tab name" value="${name}">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Enter the tab name" value="${name}">
+        <button class="btn btn-outline-secondary btn-delete-tab" data-index="${count - 1}" data-bs-toggle="tooltip" data-bs-title="Удалить вкладку и ее содержимое">${Icon.DELETE}</button>
+      </div>
     </div>
     <div>
       <label>Tab content</label>
