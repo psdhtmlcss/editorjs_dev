@@ -37,7 +37,9 @@ const editor = new EditorJS({
       class: SimpleImage,
       inlineToolbar: ['link']
     },
-    tabs: Tabs,
+    tabs: {
+      class: Tabs,
+    },
   },
   data: {
     time: 1552744582955,
@@ -51,19 +53,19 @@ const editor = new EditorJS({
             'Tab content two',
             'Tab content three'
           ]
-        }
+        },
       },
-      {
-        type: "tabs",
-        data: {
-          tabNames: ['Tab one', 'Tab two', 'Tab three'],
-          tabsContent: [
-            'Tab content one',
-            'Tab content two',
-            'Tab content three'
-          ]
-        }
-      },
+      // {
+      //   type: "tabs",
+      //   data: {
+      //     tabNames: ['Tab one', 'Tab two', 'Tab three'],
+      //     tabsContent: [
+      //       'Tab content one',
+      //       'Tab content two',
+      //       'Tab content three'
+      //     ]
+      //   }
+      // },
       // {
       //   type: "image",
       //   data: {
@@ -82,7 +84,7 @@ const editor = new EditorJS({
 const onSaveButtonClick = (evt) => {
   evt.preventDefault();
   editor.save().then((outputData) => {
-    console.log('Article data: ', outputData)
+    console.log('Article data: ', outputData);
   }).catch((error) => {
     console.log('Saving failed: ', error)
   });
