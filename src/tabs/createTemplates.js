@@ -13,8 +13,8 @@ export const createInputsTemplate = (count, name = '', content = '') => (
     <div class="mb-3">
       <label class="form-label">Tab name</label>
       <div class="input-group">
-        <input type="text" class="form-control" placeholder="Enter the tab name" value="${name}">
-        <button class="btn btn-outline-secondary btn-delete-tab" data-index="${count - 1}" data-bs-toggle="tooltip" data-bs-title="Удалить вкладку и ее содержимое">${Icon.DELETE}</button>
+        <input type="text" class="form-control" tabindex="${count - 1}" placeholder="Enter the tab name" value="${name}">
+        <button class="btn btn-outline-secondary btn-delete-tab" tabindex="${count}" data-index="${count - 1}" data-bs-toggle="tooltip" data-bs-title="Удалить вкладку и ее содержимое">${Icon.DELETE}</button>
       </div>
     </div>
     <div>

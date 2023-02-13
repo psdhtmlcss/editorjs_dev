@@ -15,7 +15,6 @@ export default class Tabs {
     this.addTabButton = undefined;
     this.count = 1;
     this._createInputs = this._createInputs.bind(this);
-    // this._checkEmptyInputs = this._checkEmptyInputs.bind(this);
     this._onAddButtonClick = this._onAddButtonClick.bind(this);
     this._showEditBlock = this._showEditBlock.bind(this);
     this._hideTabs = this._hideTabs.bind(this);
@@ -63,14 +62,18 @@ export default class Tabs {
 
       return this.wrapper;
     }
-
-    this._createInputs();
+    
     this.wrapper.append(this.editBlock);
+    this._createInputs();
     this.addTabButton.classList.remove('d-none');
     this.wrapper.append(this.addTabButton);
 
     return this.wrapper;
 
+  }
+
+  getCurrentBlockIndex() {
+    return this.api.blocks.getCurrentBlockIndex();
   }
 
   // Сохранение данных
@@ -95,10 +98,10 @@ export default class Tabs {
   }
 
   validate(savedData){
-    if (tabValidate(savedData.tabNames) && tabValidate(savedData.tabsContent)) {
+    if (tabValidate(savedData.tabNames)) {
       return true;
     }
-    alert('Заполните все пустые поля, либо удалите пустые вкладки');
+    alert('Название вкладки обязательно к заполнению');
     return false;
   }
 
@@ -150,9 +153,7 @@ export default class Tabs {
   _onDeleteButtonClick(evt) {
     evt.preventDefault();
     this.count = 1;
-    // перезаписать данные блока
     this._saveData();
-    console.log('перезаписала данные', this.data);
     this.editBlock.innerHTML = '';
     this.data.tabNames.splice(evt.currentTarget.dataset.index, 1);
     this.data.tabsContent.splice(evt.currentTarget.dataset.index, 1);
@@ -161,25 +162,20 @@ export default class Tabs {
       this.editBlock.insertAdjacentHTML('beforeend', inputs);
       this.count = this.count + 1;
     })
-    if (this._checkTabsCount()) {
-      this._setHandlers();
-    } else {
-      // this.api.blocks.delete(0);
-      console.log(',')
+    this._setHandlers();
+    if (this._checkTabsCount() === 0) {
+      this.api.blocks.delete(this.getCurrentBlockIndex());
     }
   }
 
   _checkTabsCount() {
     const tabsCount = this.editBlock.querySelectorAll('.tab-edit-block');
-    console.log(tabsCount);
-    return tabsCount.length > 0 ? true : false;
+    return tabsCount.length;
   }
 
   _checkEmptyInputs() {
     const inputs = Array.from(this.editBlock.querySelectorAll('input.form-control'));
-    const textareas = Array.from(this.editBlock.querySelectorAll('textarea.form-control'));
     const tabNames = [];
-    const tabsContent = [];
 
     inputs.forEach((item) => {
       if (!item.value.trim()) {
@@ -188,17 +184,10 @@ export default class Tabs {
       tabNames.push(item.value.trim());
     })
 
-    textareas.forEach((item) => {
-      if (!item.value.trim()) {
-        item.classList.add('is-invalid');
-      }
-      tabsContent.push(item.value.trim());
-    })
-
-    if (tabValidate(tabNames) && tabValidate(tabsContent)) {
+    if (tabValidate(tabNames)) {
       return true;
     } else {
-      alert('Заполните все пустые поля, либо удалите пустые вкладки');
+      alert('Название вкладки обязательно к заполнению');
       return false;
     }
   }
@@ -212,24 +201,13 @@ export default class Tabs {
 
   _saveData() {
     const inputs = Array.from(this.editBlock.querySelectorAll('input.form-control'));
-    const textareas = Array.from(this.editBlock.querySelectorAll('textarea.form-control'));
 
     this.data.tabNames = [];
-    this.data.tabsContent = [];
 
     inputs.forEach((item) => {
-      if (!item.value.trim()) {
+      if (item.value.trim()) {
         this.data.tabNames.push(item.value);
       }
     });
-
-    textareas.forEach((item) => {
-      if (!item.value.trim()) {
-        this.data.tabsContent.push(item.value);
-      }
-    });
-
-    console.log('after save data names', this.data.tabNames);
-    console.log('after save data content', this.data.tabsContent);
   }
 }

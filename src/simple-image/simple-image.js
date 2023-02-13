@@ -135,7 +135,6 @@ export default class SimpleImage {
 
   _acceptTuneView() {
     const img = this.wrapper.querySelector('img');
-    console.log(this.api.blocks.getCurrentBlockIndex());
     this.settings.forEach(tune => {
       img.classList.toggle(tune.className, !!this.data[tune.name]);
 
