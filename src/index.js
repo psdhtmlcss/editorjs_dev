@@ -5,6 +5,7 @@ import List from '@editorjs/list';
 import Embed from '@editorjs/embed';
 import SimpleImage from './simple-image/simple-image.js';
 import Tabs from './tabs/tabs.js';
+import Table from 'editorjs-table';
 
 // const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
 // console.log(tooltipTriggerList);
@@ -40,6 +41,14 @@ const editor = new EditorJS({
     tabs: {
       class: Tabs,
     },
+    table: {
+      class: Table,
+      inlineToolbar: true,
+      config: {
+        rows: 2,
+        cols: 3,
+      },
+    }
   },
   data: {
     time: 1552744582955,
@@ -76,6 +85,12 @@ const editor = new EditorJS({
           ]
         }
       },
+      {
+        "type" : "table",
+        "data" : {
+            "content" : [ ["Kine", "1 pcs", "100$"], ["Pigs", "3 pcs", "200$"], ["Chickens", "12 pcs", "150$"] ]
+        }
+    }
     ],
     version: "2.11.10"
   }
