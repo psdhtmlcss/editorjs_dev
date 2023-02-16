@@ -66,31 +66,11 @@ const editor = new EditorJS({
       {
         type: "tabs",
         data: {
-          tabNames: ['Tab one', 'Tab two', 'Tab three'],
+          tabNames: ["Tab one", "Tab two", "Tab three"],
           tabsContent: [ 
-            [
-              {
-                type: "text",
-                data: "Simple text"
-              },
-              {
-                type: "image",
-                data: {
-                  url: "https://cdn.stocksnap.io/img-thumbs/960w/abstract-background_VCJK4NBK4W.jpg",
-                  alt: "Image description"
-                }
-              },
-              {
-                type: "table",
-                data: [ ["Kine", "1 pcs", "100$"], ["Pigs", "3 pcs", "200$"], ["Chickens", "12 pcs", "150$"] ]
-              }
-            ],
-            [
-              {
-                type: "text",
-                data: "Simple text"
-              }
-            ]
+            "Tab content one",
+            "Tab content two",
+            "Tab content three"
           ]
         }
       },
