@@ -53,35 +53,44 @@ const editor = new EditorJS({
   data: {
     time: 1552744582955,
     blocks: [
-      {
-        type: "image",
-        data: {
-          url: "https://cdn.stocksnap.io/img-thumbs/960w/abstract-background_VCJK4NBK4W.jpg",
-          caption: "Some image",
-          withBorder: false,
-          withBorderRadius: true,
-          stretched: false
-        }
-      },
-      {
-        type: "tabs",
-        data: {
-          tabNames: ['Tab one', 'Tab two', 'Tab three'],
-          tabsContent: [
-            'Tab content one',
-            'Tab content two',
-            'Tab content three'
-          ]
-        },
-      },
+      // {
+      //   type: "image",
+      //   data: {
+      //     url: "https://cdn.stocksnap.io/img-thumbs/960w/abstract-background_VCJK4NBK4W.jpg",
+      //     caption: "Some image",
+      //     withBorder: false,
+      //     withBorderRadius: true,
+      //     stretched: false
+      //   }
+      // },
       {
         type: "tabs",
         data: {
           tabNames: ['Tab one', 'Tab two', 'Tab three'],
-          tabsContent: [
-            'Tab content one',
-            'Tab content two',
-            'Tab content three'
+          tabsContent: [ 
+            [
+              {
+                type: "text",
+                data: "Simple text"
+              },
+              {
+                type: "image",
+                data: {
+                  url: "https://cdn.stocksnap.io/img-thumbs/960w/abstract-background_VCJK4NBK4W.jpg",
+                  alt: "Image description"
+                }
+              },
+              {
+                type: "table",
+                data: [ ["Kine", "1 pcs", "100$"], ["Pigs", "3 pcs", "200$"], ["Chickens", "12 pcs", "150$"] ]
+              }
+            ],
+            [
+              {
+                type: "text",
+                data: "Simple text"
+              }
+            ]
           ]
         }
       },
@@ -89,8 +98,8 @@ const editor = new EditorJS({
         "type" : "table",
         "data" : {
             "content" : [ ["Kine", "1 pcs", "100$"], ["Pigs", "3 pcs", "200$"], ["Chickens", "12 pcs", "150$"] ]
-        }
-    }
+          }
+      }
     ],
     version: "2.11.10"
   }
