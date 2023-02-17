@@ -9,3 +9,9 @@ export const editButtonSetting = {
   icon: Icon.EDIT_BUTTON,
   label: 'Edit'
 };
+
+export const TypeData = {
+  TEXT: 'text',
+  IMAGE: 'image',
+  TABLE: 'table'
+};

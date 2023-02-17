@@ -1,4 +1,4 @@
-import { Icon, editButtonSetting } from './const';
+import { Icon, editButtonSetting, TypeData } from './const';
 import * as t from './createTemplates';
 import { nanoid } from 'nanoid';
 import { tabValidate } from './validate';
@@ -14,11 +14,6 @@ export default class Tabs {
     this.editBlock = undefined;
     this.addTabButton = undefined;
     this.count = 1;
-    this._createInputs = this._createInputs.bind(this);
-    this._onAddButtonClick = this._onAddButtonClick.bind(this);
-    this._showEditBlock = this._showEditBlock.bind(this);
-    this._hideTabs = this._hideTabs.bind(this);
-    this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
     this.id = nanoid();
   }
   // Отрисовка кнопки в меню
@@ -44,29 +39,14 @@ export default class Tabs {
   // Отрисовка полей для нового контента
   render() {
     this.wrapper = t.createBlockWrapperTemplate();
-    this.editBlock = t.createEditBlockWrapperTemplate();
-    this.addTabButton = t.createAddTabButtonTemplate();
-    this.addTabButton.addEventListener('click', this._onAddButtonClick);
-    if (this.data && this.data.tabNames.length) {
-      this._createTabs();
-      this._createTabContent();
-      this.data.tabNames.forEach((item, index) => {
-        const inputs = t.createInputsTemplate(this.count, item, this.data.tabsContent[index]);
-        this.editBlock.insertAdjacentHTML('beforeend', inputs);
-        this.count = this.count + 1;
-      })
-      this.editBlock.classList.add('d-none');
-      this.wrapper.append(this.editBlock);
-      this.wrapper.append(this.addTabButton);
-      this._setHandlers();
+    this._createTabs();
+    this._createTabContent();
 
-      return this.wrapper;
+    if (this.data && this.data.tabNames.length) {
+      this.data.tabsContent.forEach((item, index) => {
+        this._renderData(item, index);
+      })
     }
-    
-    this.wrapper.append(this.editBlock);
-    this._createInputs();
-    this.addTabButton.classList.remove('d-none');
-    this.wrapper.append(this.addTabButton);
 
     return this.wrapper;
 
@@ -107,107 +87,98 @@ export default class Tabs {
 
   _createTabs() {
     const ul = t.createNavTabsWrapperTemplate();
-    this.data.tabNames.forEach((item, index) => {
-      ul.insertAdjacentHTML('beforeend', t.createNavTabsItemTemplate(item, index, this.id));
-    })
+    if (this.data && this.data.tabNames.length) {
+      this.data.tabNames.forEach((item, index) => {
+        ul.insertAdjacentHTML('beforeend', t.createNavTabsItemTemplate(item, index, this.id));
+      })
+    } else {
+      ul.insertAdjacentHTML('beforeend', t.createNavTabsItemTemplate('Tab one', 0, this.id));
+    }
+    
 
     this.wrapper.append(ul);
   }
 
   _createTabContent() {
     const tabContentWrapper = t.createTabsContentWrapperTemplate();
-    this.data.tabsContent.forEach((item, index) => {
-      tabContentWrapper.insertAdjacentHTML('beforeend', t.createTabContentItemTemplate(item, index, this.id));
-    })
-
+    if (this.data && this.data.tabNames.length) {
+      this.data.tabsContent.forEach((item, index) => {
+        tabContentWrapper.insertAdjacentHTML('beforeend', t.createTabContentItemTemplate(index, this.id));
+      })
+    } else {
+      tabContentWrapper.insertAdjacentHTML('beforeend', t.createTabContentItemTemplate(0, this.id));
+    }
     this.wrapper.append(tabContentWrapper);
   }
 
-  _createInputs() {
-    const inputs = t.createInputsTemplate(this.count);
-    this.editBlock.insertAdjacentHTML('beforeend', inputs);
-    this.count = this.count + 1;
-    this._setHandlers();
-  }
-
-  _showEditBlock() {
-    this.editBlock.classList.remove('d-none');
-    this.addTabButton.classList.remove('d-none');
-    this.api.toolbar.close();
-    this._hideTabs();
-  }
-
-  _hideTabs() {
-    this.wrapper.querySelector('.nav-tabs').classList.add('d-none');
-    this.wrapper.querySelector('.tab-content').classList.add('d-none');
-  }
-
-  _setHandlers() {
-    const buttons = Array.from(this.wrapper.querySelectorAll('.btn-delete-tab'));
-    buttons.forEach((button) => {
-      button.removeEventListener('click', this._onDeleteButtonClick);
-      button.addEventListener('click', this._onDeleteButtonClick);
-    })
-  }
-
-  _onDeleteButtonClick(evt) {
-    evt.preventDefault();
-    this.count = 1;
-    this._saveData();
-    this.editBlock.innerHTML = '';
-    this.data.tabNames.splice(evt.currentTarget.dataset.index, 1);
-    this.data.tabsContent.splice(evt.currentTarget.dataset.index, 1);
-    this.data.tabNames.forEach((item, index) => {
-      const inputs = t.createInputsTemplate(this.count, item, this.data.tabsContent[index]);
-      this.editBlock.insertAdjacentHTML('beforeend', inputs);
-      this.count = this.count + 1;
-    })
-    this._setHandlers();
-    if (this._checkTabsCount() === 0) {
-      this.api.blocks.delete(this.getCurrentBlockIndex());
-    }
-  }
-
-  _checkTabsCount() {
-    const tabsCount = this.editBlock.querySelectorAll('.tab-edit-block');
-    return tabsCount.length;
-  }
-
-  _checkEmptyInputs() {
-    const inputs = Array.from(this.editBlock.querySelectorAll('input.form-control'));
-    const tabNames = [];
-
-    inputs.forEach((item) => {
-      if (!item.value.trim()) {
-        item.classList.add('is-invalid');
+  _renderData(data, tabIndex) {
+    data.forEach((item) => {
+      switch(item.type) {
+        case TypeData.TEXT:
+          this._renderTextBlock(item.data, tabIndex);
+          break;
+        case TypeData.IMAGE:
+          this._renderImageBlock(item.data, tabIndex);
+          break;
+        case TypeData.TABLE:
+          this._renderTableBlock(item.data, tabIndex);
+          break;
       }
-      tabNames.push(item.value.trim());
     })
-
-    if (tabValidate(tabNames)) {
-      return true;
-    } else {
-      alert('Название вкладки обязательно к заполнению');
-      return false;
-    }
   }
 
-  _onAddButtonClick(evt) {
-    evt.preventDefault();
-    if (this._checkEmptyInputs()) {
-      this._createInputs();
-    }
+  _renderTextBlock(data, tabIndex) {
+    console.log('data', data);
+    console.log('tabIndex', tabIndex);
+    const blockWrapper = document.createElement('div');
+    blockWrapper.classList.add('text-block');
+    blockWrapper.append(data);
+    const tab = this._checkTabs()[tabIndex];
+    console.log('куда вставлять', tab);
+    tab.append(blockWrapper);
   }
 
-  _saveData() {
-    const inputs = Array.from(this.editBlock.querySelectorAll('input.form-control'));
+  _renderImageBlock(data, tabIndex) {
+    console.log('Данные картинки', data);
+    console.log('tabIndex', tabIndex);
+    const tab = this._checkTabs()[tabIndex];
+    const imageWrapper = document.createElement('div');
+    const img = document.createElement('img');
+    const url = document.createElement('input');
+    imageWrapper.classList.add('image-block');
+    img.alt = data.alt;
+    img.src = data.url;
+    img.classList.add('img-fluid');
+    url.classList.add('form-control');
+    url.value = data.url;
+    imageWrapper.append(img);
+    imageWrapper.append(url);
+    tab.append(imageWrapper);
+  }
 
-    this.data.tabNames = [];
+  _renderTableBlock(data, tabIndex) {
+    console.log('Данные таблицы', data);
+    console.log('tabIndex', tabIndex);
+    const tab = this._checkTabs()[tabIndex];
+    const table = document.createElement('table');
+    const tbody = document.createElement('tbody');
+    table.classList.add('table');
+    data.forEach((item) => {
+      const row = document.createElement('tr');
+      item.forEach((item) => {
+        const cell = document.createElement('td');
+        cell.textContent = item;
+        cell.contenteditable = true;
+        row.append(cell);
+      })
+      tbody.append(row);
+    })
+    table.append(tbody);
+    tab.append(table);
+  }
 
-    inputs.forEach((item) => {
-      if (item.value.trim()) {
-        this.data.tabNames.push(item.value);
-      }
-    });
+  _checkTabs() {
+    const tabs = Array.from(this.wrapper.querySelectorAll('.tab-pane'));
+    return tabs;
   }
 }

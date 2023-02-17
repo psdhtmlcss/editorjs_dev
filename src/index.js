@@ -88,18 +88,24 @@ const editor = new EditorJS({
             [
               {
                 type: "text",
-                data: "Simple text"
+                data: "Simple text 1234654"
+              }
+            ],
+            [
+              {
+                type: "text",
+                data: "Simple text 5555555"
               }
             ]
           ]
         }
       },
-      {
-        "type" : "table",
-        "data" : {
-            "content" : [ ["Kine", "1 pcs", "100$"], ["Pigs", "3 pcs", "200$"], ["Chickens", "12 pcs", "150$"] ]
-          }
-      }
+      // {
+      //   "type" : "table",
+      //   "data" : {
+      //       "content" : [ ["Kine", "1 pcs", "100$"], ["Pigs", "3 pcs", "200$"], ["Chickens", "12 pcs", "150$"] ]
+      //     }
+      // }
     ],
     version: "2.11.10"
   }

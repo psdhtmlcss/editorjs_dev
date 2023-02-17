@@ -56,7 +56,7 @@ export const createNavTabsWrapperTemplate = () => {
 
 export const createNavTabsItemTemplate = (item, index, id) => (
   `<li class="nav-item">
-    <button class="nav-link ${index === 0 ? 'active' : ''}" data-bs-toggle="tab" data-bs-target="#${id}-tab-${index}" type="button" role="tab">${item}</button>
+    <button class="nav-link ${index === 0 ? 'active' : ''}" data-bs-toggle="tab" data-bs-target="#tab-${index}-${id}" type="button" role="tab" contenteditable="true">${item}</button>
   </li>`
 );
 
@@ -67,6 +67,6 @@ export const createTabsContentWrapperTemplate = () => {
   return tabContentWrapper;
 };
 
-export const createTabContentItemTemplate = (item, index, id) => (
-  `<div class="tab-pane fade ${index === 0 ? 'show active' : ''}" id="${id}-tab-${index}" role="tabpanel">${item}</div>`
-);
+export const createTabContentItemTemplate = (index, id) => {
+  return `<div class="tab-pane fade ${index === 0 ? 'show active' : ''}" id="tab-${index}-${id}"></div>`
+};
