@@ -68,35 +68,35 @@ const editor = new EditorJS({
         data: {
           tabNames: ['Tab one', 'Tab two', 'Tab three'],
           tabsContent: [ 
-            [
-              {
-                type: "text",
-                data: "Simple text"
-              },
-              {
-                type: "image",
-                data: {
-                  url: "https://cdn.stocksnap.io/img-thumbs/960w/abstract-background_VCJK4NBK4W.jpg",
-                  alt: "Image description"
-                }
-              },
-              {
-                type: "table",
-                data: [ ["Kine", "1 pcs", "100$"], ["Pigs", "3 pcs", "200$"], ["Chickens", "12 pcs", "150$"] ]
-              }
-            ],
-            [
-              {
-                type: "text",
-                data: "Simple text 1234654"
-              }
-            ],
-            [
-              {
-                type: "text",
-                data: "Simple text 5555555"
-              }
-            ]
+            // [
+            //   {
+            //     type: "text",
+            //     data: "Simple text"
+            //   },
+            //   {
+            //     type: "image",
+            //     data: {
+            //       url: "https://cdn.stocksnap.io/img-thumbs/960w/abstract-background_VCJK4NBK4W.jpg",
+            //       alt: "Image description"
+            //     }
+            //   },
+            //   {
+            //     type: "table",
+            //     data: [ ["Kine", "1 pcs", "100$"], ["Pigs", "3 pcs", "200$"], ["Chickens", "12 pcs", "150$"] ]
+            //   }
+            // ],
+            // [
+            //   {
+            //     type: "text",
+            //     data: "Simple text 1234654"
+            //   }
+            // ],
+            // [
+            //   {
+            //     type: "text",
+            //     data: "Simple text 5555555"
+            //   }
+            // ]
           ]
         }
       },
@@ -110,6 +110,8 @@ const editor = new EditorJS({
     version: "2.11.10"
   }
 });
+
+// const editor2 = new EditorJS('editorjs2');
 
 const onSaveButtonClick = (evt) => {
   evt.preventDefault();

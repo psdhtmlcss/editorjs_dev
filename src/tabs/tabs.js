@@ -15,6 +15,7 @@ export default class Tabs {
     this.addTabButton = undefined;
     this.count = 1;
     this.id = nanoid();
+    this._activeTabEditor = this._activeTabEditor.bind(this);
   }
   // Отрисовка кнопки в меню
   static get toolbox() {
@@ -41,12 +42,15 @@ export default class Tabs {
     this.wrapper = t.createBlockWrapperTemplate();
     this._createTabs();
     this._createTabContent();
+    this._activeTabEditor();
+    // const tab = this.wrapper.querySelector('.tab-pane');
+    // console.log(tab.id);
 
-    if (this.data && this.data.tabNames.length) {
-      this.data.tabsContent.forEach((item, index) => {
-        this._renderData(item, index);
-      })
-    }
+    // if (this.data && this.data.tabNames.length) {
+    //   this.data.tabsContent.forEach((item, index) => {
+    //     this._renderData(item, index);
+    //   })
+    // }
 
     return this.wrapper;
 
@@ -101,13 +105,14 @@ export default class Tabs {
 
   _createTabContent() {
     const tabContentWrapper = t.createTabsContentWrapperTemplate();
-    if (this.data && this.data.tabNames.length) {
-      this.data.tabsContent.forEach((item, index) => {
-        tabContentWrapper.insertAdjacentHTML('beforeend', t.createTabContentItemTemplate(index, this.id));
-      })
-    } else {
-      tabContentWrapper.insertAdjacentHTML('beforeend', t.createTabContentItemTemplate(0, this.id));
-    }
+    // if (this.data && this.data.tabNames.length) {
+    //   this.data.tabsContent.forEach((item, index) => {
+    //     tabContentWrapper.insertAdjacentHTML('beforeend', t.createTabContentItemTemplate(index, this.id));
+    //   })
+    // } else {
+    //   tabContentWrapper.insertAdjacentHTML('beforeend', t.createTabContentItemTemplate(0, this.id));
+    // }
+    tabContentWrapper.insertAdjacentHTML('beforeend', t.createTabContentItemTemplate(0, this.id));
     this.wrapper.append(tabContentWrapper);
   }
 
@@ -180,5 +185,13 @@ export default class Tabs {
   _checkTabs() {
     const tabs = Array.from(this.wrapper.querySelectorAll('.tab-pane'));
     return tabs;
+  }
+
+  _activeTabEditor() {
+    console.log('im here');
+    const tab = this.wrapper.querySelector('.tab-pane');
+    console.log(tab.id);
+    const tabEditor = new EditorJS()
+    // console.log('im still here');
   }
 }
