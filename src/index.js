@@ -18,7 +18,7 @@ const editor = new EditorJS({
   holder: 'editorjs',
   autofocus: true,
   tools: {
-    header: {
+    heading: {
       class: Header,
       config: {
         placeholder: 'Enter a header',
@@ -53,33 +53,126 @@ const editor = new EditorJS({
   data: {
     time: 1552744582955,
     blocks: [
-      // {
-      //   type: "image",
-      //   data: {
-      //     url: "https://cdn.stocksnap.io/img-thumbs/960w/abstract-background_VCJK4NBK4W.jpg",
-      //     caption: "Some image",
-      //     withBorder: false,
-      //     withBorderRadius: true,
-      //     stretched: false
-      //   }
-      // },
       {
         type: "tabs",
         data: {
           tabNames: ["Tab one", "Tab two", "Tab three"],
-          tabsContent: [ 
-            "Tab content one",
-            "Tab content two",
-            "Tab content three"
+          tabsContent: [
+            // Первая вкладка
+            {
+              time: 1552744582955,
+              blocks: [
+                {
+                  "type": "heading",
+                  "data": {
+                     "text": "Heading level 2",
+                     "level": 2
+                    }
+               },
+               {
+                "type": "paragraph",
+                "data": {
+                   "text": "Hey. Meet the new Editor. On this page you can see it in action — try to edit this text. Source code of the page contains the example of connection and configuration."
+                  }
+                },
+                {
+                  "type": "paragraph",
+                  "data": {
+                     "text": "On this page you can see it in action — try to edit this text."
+                    }
+                },
+                {
+                  "type": "list",
+                  "data": {
+                     "style": "unordered",
+                     "items": [
+                        "It is a block-styled editor",
+                        "It returns clean data output in JSON",
+                        "Designed to be extendable and pluggable with a simple API"
+                     ]
+                  }
+                },
+              ]
+            },
+            // Вторая вкладка
+            {
+              time: 1552744582955,
+              blocks: [
+                {
+                  "type": "heading",
+                  "data": {
+                     "text": "Test test test",
+                     "level": 2
+                    }
+               },
+               {
+                "type": "paragraph",
+                "data": {
+                   "text": "Hey. Meet the new Editor. On this page you can see it in action — try to edit this text. Source code of the page contains the example of connection and configuration."
+                  }
+                },
+                {
+                  "type": "list",
+                  "data": {
+                     "style": "ordered",
+                     "items": [
+                        "It is a block-styled editor",
+                        "It returns clean data output in JSON",
+                        "Designed to be extendable and pluggable with a simple API",
+                        "Designed to be extendable and pluggable with a simple API",
+                        "Designed to be extendable and pluggable with a simple API",
+                        "Designed to be extendable and pluggable with a simple API",
+                        "Designed to be extendable and pluggable with a simple API",
+                     ]
+                  }
+                },
+
+              ]
+            },
+            // Третья вкладка
+            {
+              time: 1552744582955,
+              blocks: []
+            }
           ]
         }
       },
+      // {
+      //   "type" : "table",
+      //   "data" : {
+      //       "content" : [ ["Kine", "1 pcs", "100$"], ["Pigs", "3 pcs", "200$"], ["Chickens", "12 pcs", "150$"] ]
+      //     }
+      // },
       {
-        "type" : "table",
-        "data" : {
-            "content" : [ ["Kine", "1 pcs", "100$"], ["Pigs", "3 pcs", "200$"], ["Chickens", "12 pcs", "150$"] ]
+        "type": "heading",
+        "data": {
+           "text": "Heading level 2",
+           "level": 2
           }
-      }
+     },
+     {
+      "type": "paragraph",
+      "data": {
+         "text": "Hey. Meet the new Editor. On this page you can see it in action — try to edit this text. Source code of the page contains the example of connection and configuration."
+        }
+      },
+      {
+        "type": "paragraph",
+        "data": {
+           "text": "On this page you can see it in action — try to edit this text."
+          }
+      },
+      {
+        "type": "list",
+        "data": {
+           "style": "unordered",
+           "items": [
+              "It is a block-styled editor",
+              "It returns clean data output in JSON",
+              "Designed to be extendable and pluggable with a simple API"
+           ]
+        }
+     },
     ],
     version: "2.11.10"
   }

@@ -7,19 +7,15 @@ export const createBlockSettingsButtonTemplate = (icon, label, className) => (
   </div>`
 );
 
-export const createInputsTemplate = (count, name = '', content = '') => (
+export const createInputsTemplate = (count, name = '') => (
   `<div class="tab-edit-block mb-3">
     <h4>Tab ${count}</h4>
     <div class="mb-3">
       <label class="form-label">Tab name</label>
       <div class="input-group">
-        <input type="text" class="form-control" tabindex="${count - 1}" placeholder="Enter the tab name" value="${name}">
+        <input type="text" class="form-control tab-input" tabindex="${count - 1}" placeholder="Enter the tab name" value="${name}">
         <button class="btn btn-outline-secondary btn-delete-tab" tabindex="${count}" data-index="${count - 1}" data-bs-toggle="tooltip" data-bs-title="Удалить вкладку и ее содержимое">${Icon.DELETE}</button>
       </div>
-    </div>
-    <div>
-      <label>Tab content</label>
-      <textarea class="form-control" placeholder="Enter a tab content">${content}</textarea>
     </div>
   </div>`
 );
@@ -38,13 +34,20 @@ export const createEditBlockWrapperTemplate = () => {
   return editBlock;
 };
 
-export const createAddTabButtonTemplate = () => {
-  const button = document.createElement('button');
-  button.type = 'button';
-  button.classList.add('btn', 'btn-primary', 'btn-add-tab', 'd-none');
-  button.textContent = 'Add tab';
+export const createButtonsWrapperTemplate = () => {
+  const buttonsWrapper = document.createElement('div');
+  const addButton = document.createElement('button');
+  const saveButton = document.createElement('button');
+  addButton.type = 'button';
+  addButton.classList.add('btn', 'btn-outline-dark', 'btn-add-tab');
+  addButton.textContent = 'Add tab';
+  saveButton.type = 'button';
+  saveButton.classList.add('btn', 'btn-primary', 'btn-save-tabs');
+  saveButton.textContent = 'Save tabs';
+  buttonsWrapper.classList.add('d-flex', 'justify-content-between', 'd-none');
+  buttonsWrapper.append(addButton, saveButton);
   
-  return button;
+  return buttonsWrapper;
 };
 
 export const createNavTabsWrapperTemplate = () => {
@@ -55,8 +58,8 @@ export const createNavTabsWrapperTemplate = () => {
 };
 
 export const createNavTabsItemTemplate = (item, index, id) => (
-  `<li class="nav-item">
-    <button class="nav-link ${index === 0 ? 'active' : ''}" data-bs-toggle="tab" data-bs-target="#${id}-tab-${index}" type="button" role="tab">${item}</button>
+  `<li class="nav-item" data-tab-id="${id}-tab-${index}">
+    <button class="nav-link ${index === 0 ? 'active' : ''}" data-bs-toggle="tab" data-bs-target="#${id}-content-${index}" type="button" role="tab">${item}</button>
   </li>`
 );
 
@@ -68,5 +71,5 @@ export const createTabsContentWrapperTemplate = () => {
 };
 
 export const createTabContentItemTemplate = (item, index, id) => (
-  `<div class="tab-pane fade ${index === 0 ? 'show active' : ''}" id="${id}-tab-${index}" role="tabpanel">${item}</div>`
+  `<div class="tab-pane fade ${index === 0 ? 'show active' : ''}" id="${id}-content-${index}" role="tabpanel"></div>`
 );

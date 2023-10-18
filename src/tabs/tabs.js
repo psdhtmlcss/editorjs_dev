@@ -2,6 +2,29 @@ import { Icon, editButtonSetting } from './const';
 import * as t from './createTemplates';
 import { nanoid } from 'nanoid';
 import { tabValidate } from './validate';
+import EditorJS from '@editorjs/editorjs';
+import Header from '@editorjs/header';
+import List from '@editorjs/list';
+import Embed from '@editorjs/embed';
+
+const editorTools = {
+  heading: {
+    class: Header,
+    config: {
+      placeholder: 'Enter a header',
+      levels: [1, 2, 3],
+      defaultLevel: 1
+    }
+  },
+  list: {
+    class: List,
+    inlineToolbar: true,
+    config: {
+      defaultStyle: 'unordered'
+    }
+  },
+  embed: Embed,
+};
 
 export default class Tabs {
   constructor({ data, api }) {
@@ -10,16 +33,21 @@ export default class Tabs {
       tabsContent: data.tabsContent || [],
     };
     this.api = api;
+    this.id = nanoid();
     this.wrapper = undefined;
     this.editBlock = undefined;
+    this.editTabsButtonsWrapper = undefined;
     this.addTabButton = undefined;
+    this.saveTabsButton = undefined;
     this.count = 1;
+    this._editor = {};
     this._createInputs = this._createInputs.bind(this);
     this._onAddButtonClick = this._onAddButtonClick.bind(this);
+    this._onSaveTabsButtonClick = this._onSaveTabsButtonClick.bind(this);
     this._showEditBlock = this._showEditBlock.bind(this);
     this._hideTabs = this._hideTabs.bind(this);
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
-    this.id = nanoid();
+    console.log('data', this.data);
   }
   // Отрисовка кнопки в меню
   static get toolbox() {
@@ -45,19 +73,22 @@ export default class Tabs {
   render() {
     this.wrapper = t.createBlockWrapperTemplate();
     this.editBlock = t.createEditBlockWrapperTemplate();
-    this.addTabButton = t.createAddTabButtonTemplate();
+    this.editTabsButtonsWrapper = t.createButtonsWrapperTemplate();
+    this.addTabButton = this.editTabsButtonsWrapper.querySelector('.btn-add-tab');
+    this.saveTabsButton = this.editTabsButtonsWrapper.querySelector('.btn-save-tabs');
     this.addTabButton.addEventListener('click', this._onAddButtonClick);
+    this.saveTabsButton.addEventListener('click', this._onSaveTabsButtonClick);
     if (this.data && this.data.tabNames.length) {
       this._createTabs();
       this._createTabContent();
-      this.data.tabNames.forEach((item, index) => {
-        const inputs = t.createInputsTemplate(this.count, item, this.data.tabsContent[index]);
+      this.data.tabNames.forEach((item) => {
+        const inputs = t.createInputsTemplate(this.count, item);
         this.editBlock.insertAdjacentHTML('beforeend', inputs);
         this.count = this.count + 1;
       })
       this.editBlock.classList.add('d-none');
       this.wrapper.append(this.editBlock);
-      this.wrapper.append(this.addTabButton);
+      this.wrapper.append(this.editTabsButtonsWrapper);
       this._setHandlers();
 
       return this.wrapper;
@@ -65,8 +96,8 @@ export default class Tabs {
     
     this.wrapper.append(this.editBlock);
     this._createInputs();
-    this.addTabButton.classList.remove('d-none');
-    this.wrapper.append(this.addTabButton);
+    this.editTabsButtonsWrapper.classList.remove('d-none');
+    this.wrapper.append(this.editTabsButtonsWrapper);
 
     return this.wrapper;
 
@@ -78,17 +109,17 @@ export default class Tabs {
 
   // Сохранение данных
   save(blockContent) {
-    const inputs = Array.from(blockContent.querySelectorAll('input'));
-    const textareas = Array.from(blockContent.querySelectorAll('textarea'));
+    console.log('bloc content', blockContent);
+    const inputs = Array.from(blockContent.querySelectorAll('input.tab-input'));
+    console.log('inputs', inputs);
     const tabNames = [];
     const tabsContent = [];
 
-    inputs.forEach((item) => {
+    inputs.forEach((item, index) => {
       tabNames.push(item.value);
-    })
-
-    textareas.forEach((item) => {
-      tabsContent.push(item.value);
+      this._editor[`editor_${index}`].save().then((outputData) => {
+        tabsContent.push(outputData);
+      })
     })
 
     return Object.assign(this.data, {
@@ -98,6 +129,7 @@ export default class Tabs {
   }
 
   validate(savedData){
+    console.log('savedDatat', savedData);
     if (tabValidate(savedData.tabNames)) {
       return true;
     }
@@ -118,6 +150,12 @@ export default class Tabs {
     const tabContentWrapper = t.createTabsContentWrapperTemplate();
     this.data.tabsContent.forEach((item, index) => {
       tabContentWrapper.insertAdjacentHTML('beforeend', t.createTabContentItemTemplate(item, index, this.id));
+      this._editor[`editor_${index}`] = new EditorJS({
+        holder: `${this.id}-content-${index}`,
+        tools: editorTools,
+        data: this.data.tabsContent[index]
+      })
+      console.log(this._editor[`editor_${index}`]);
     })
 
     this.wrapper.append(tabContentWrapper);
@@ -132,9 +170,20 @@ export default class Tabs {
 
   _showEditBlock() {
     this.editBlock.classList.remove('d-none');
-    this.addTabButton.classList.remove('d-none');
+    this.editTabsButtonsWrapper.classList.remove('d-none');
     this.api.toolbar.close();
     this._hideTabs();
+  }
+
+  _hideEditBlock() {
+    this.editBlock.classList.add('d-none');
+    this.editTabsButtonsWrapper.classList.add('d-none');
+  }
+
+  _showTabs() {
+    this.wrapper.querySelector('.nav-tabs').classList.remove('d-none');
+    this.wrapper.querySelector('.tab-content').classList.remove('d-none');
+    this._hideEditBlock();
   }
 
   _hideTabs() {
@@ -152,19 +201,26 @@ export default class Tabs {
 
   _onDeleteButtonClick(evt) {
     evt.preventDefault();
-    this.count = 1;
-    this._saveData();
-    this.editBlock.innerHTML = '';
-    this.data.tabNames.splice(evt.currentTarget.dataset.index, 1);
-    this.data.tabsContent.splice(evt.currentTarget.dataset.index, 1);
-    this.data.tabNames.forEach((item, index) => {
-      const inputs = t.createInputsTemplate(this.count, item, this.data.tabsContent[index]);
-      this.editBlock.insertAdjacentHTML('beforeend', inputs);
-      this.count = this.count + 1;
-    })
-    this._setHandlers();
+    // this.count = 1;
     if (this._checkTabsCount() === 0) {
       this.api.blocks.delete(this.getCurrentBlockIndex());
+    } else {
+      // this._saveData();
+      // this.editBlock.innerHTML = '';
+      this.data.tabNames.splice(evt.currentTarget.dataset.index, 1);
+      this.data.tabsContent.splice(evt.currentTarget.dataset.index, 1);
+      evt.currentTarget.removeEventListener('click', this._onDeleteButtonClick);
+      evt.currentTarget.parentElement.parentElement.parentElement.remove();
+      this._editor[`editor_${evt.currentTarget.dataset.index}`].destroy();
+      this.wrapper.querySelector(`.nav-item[data-tab-id="${this.id}-tab-${evt.currentTarget.dataset.index}"]`).remove();
+      this.wrapper.querySelector(`.tab-pane#${this.id}-content-${evt.currentTarget.dataset.index}`).remove();
+      // this.data.tabNames.forEach((item) => {
+      //   const inputs = t.createInputsTemplate(this.count, item);
+      //   this.editBlock.insertAdjacentHTML('beforeend', inputs);
+      //   this.count = this.count + 1;
+      // })
+      // this._setHandlers();
+      console.log('after delete data', this.data);
     }
   }
 
@@ -199,8 +255,13 @@ export default class Tabs {
     }
   }
 
+  _onSaveTabsButtonClick(evt) {
+    evt.preventDefault();
+    this._showTabs();
+  }
+
   _saveData() {
-    const inputs = Array.from(this.editBlock.querySelectorAll('input.form-control'));
+    const inputs = Array.from(this.editBlock.querySelectorAll('input.tab-input'));
 
     this.data.tabNames = [];
 
