@@ -9,12 +9,12 @@ export const createBlockSettingsButtonTemplate = (icon, label, className) => (
 
 export const createInputsTemplate = (count, name = '') => (
   `<div class="tab-edit-block mb-3">
-    <h4>Tab ${count}</h4>
+    <h4>Tab ${count + 1}</h4>
     <div class="mb-3">
       <label class="form-label">Tab name</label>
       <div class="input-group">
-        <input type="text" class="form-control tab-input" tabindex="${count - 1}" placeholder="Enter the tab name" value="${name}">
-        <button class="btn btn-outline-secondary btn-delete-tab" tabindex="${count}" data-index="${count - 1}" data-bs-toggle="tooltip" data-bs-title="Удалить вкладку и ее содержимое">${Icon.DELETE}</button>
+        <input type="text" class="form-control tab-input" data-index="${count}" tabindex="${count}" placeholder="Enter the tab name" value="${name}">
+        <button class="btn btn-outline-secondary btn-delete-tab" tabindex="${count}" data-index="${count}" data-bs-toggle="tooltip" data-bs-title="Удалить вкладку и ее содержимое">${Icon.DELETE}</button>
       </div>
     </div>
   </div>`
@@ -70,6 +70,6 @@ export const createTabsContentWrapperTemplate = () => {
   return tabContentWrapper;
 };
 
-export const createTabContentItemTemplate = (item, index, id) => (
+export const createTabContentItemTemplate = (index, id) => (
   `<div class="tab-pane fade ${index === 0 ? 'show active' : ''}" id="${id}-content-${index}" role="tabpanel"></div>`
 );

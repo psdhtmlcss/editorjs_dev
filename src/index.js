@@ -146,7 +146,7 @@ const editor = new EditorJS({
       {
         "type": "heading",
         "data": {
-           "text": "Heading level 2",
+           "text": "Heading level 222",
            "level": 2
           }
      },
