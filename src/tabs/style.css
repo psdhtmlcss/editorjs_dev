@@ -1,0 +1,7 @@
+.tabs-block-wrapper .codex-editor {
+  z-index: 0;
+}
+
+.tabs-block-wrapper .codex-editor__redactor {
+  padding-bottom: 0!important;
+}

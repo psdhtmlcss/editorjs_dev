@@ -9,3 +9,5 @@ export const editButtonSetting = {
   icon: Icon.EDIT_BUTTON,
   label: 'Edit'
 };
+
+export const errorMessage = 'Название вкладки обязательно к заполнению';

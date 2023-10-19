@@ -137,12 +137,12 @@ const editor = new EditorJS({
           ]
         }
       },
-      // {
-      //   "type" : "table",
-      //   "data" : {
-      //       "content" : [ ["Kine", "1 pcs", "100$"], ["Pigs", "3 pcs", "200$"], ["Chickens", "12 pcs", "150$"] ]
-      //     }
-      // },
+      {
+        "type" : "table",
+        "data" : {
+            "content" : [ ["Kine", "1 pcs", "100$"], ["Pigs", "3 pcs", "200$"], ["Chickens", "12 pcs", "150$"] ]
+          }
+      },
       {
         "type": "heading",
         "data": {

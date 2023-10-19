@@ -1,4 +1,4 @@
-import { Icon, editButtonSetting } from './const';
+import { Icon, editButtonSetting, errorMessage } from './const';
 import * as t from './createTemplates';
 import { nanoid } from 'nanoid';
 import { tabValidate } from './validate';
@@ -6,6 +6,7 @@ import EditorJS from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import List from '@editorjs/list';
 import Embed from '@editorjs/embed';
+import './style.css';
 
 const editorTools = {
   heading: {
@@ -48,7 +49,6 @@ export default class Tabs {
     this._hideTabs = this._hideTabs.bind(this);
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
     this._onChangeInput = this._onChangeInput.bind(this);
-    console.log('data', this.data);
   }
   // Отрисовка кнопки в меню
   static get toolbox() {
@@ -112,15 +112,13 @@ export default class Tabs {
 
   // Сохранение данных
   save(blockContent) {
-    console.log('bloc content', blockContent);
     const inputs = Array.from(blockContent.querySelectorAll('input.tab-input'));
-    console.log('inputs', inputs);
     const tabNames = [];
     const tabsContent = [];
 
-    inputs.forEach((item, index) => {
+    inputs.forEach((item) => {
       tabNames.push(item.value);
-      this._editor[`editor_${index}`].save().then((outputData) => {
+      this._editor[`editor_${item.dataset.index}`].save().then((outputData) => {
         tabsContent.push(outputData);
       })
     })
@@ -132,11 +130,10 @@ export default class Tabs {
   }
 
   validate(savedData){
-    console.log('savedDatat', savedData);
     if (tabValidate(savedData.tabNames)) {
       return true;
     }
-    alert('Название вкладки обязательно к заполнению');
+    alert(errorMessage);
     return false;
   }
 
@@ -158,7 +155,6 @@ export default class Tabs {
         tools: editorTools,
         data: this.data.tabsContent[index]
       })
-      console.log(this._editor[`editor_${index}`]);
     })
 
     this.wrapper.append(tabContentWrapper);
@@ -216,19 +212,17 @@ export default class Tabs {
     this._editor[`editor_${evt.currentTarget.dataset.index}`].destroy();
     this.wrapper.querySelector(`.nav-item[data-tab-id="${this.id}-tab-${evt.currentTarget.dataset.index}"]`).remove();
     this.wrapper.querySelector(`.tab-pane[id="${this.id}-content-${evt.currentTarget.dataset.index}"]`).remove();
-    this.wrapper.querySelector('.nav-item:first-child .nav-link')?.classList.add('active');
-    this.wrapper.querySelector('.tab-content .tab-pane:first-child')?.classList.add('active', 'show');
-    console.log('after delete data', this.data);
+    // this.wrapper.querySelector('.nav-item:first-child .nav-link')?.classList.add('active');
+    // this.wrapper.querySelector('.tab-content .tab-pane:first-child')?.classList.add('active', 'show');
     if (this._checkTabsCount() === 0) {
       this.api.blocks.delete(this.getCurrentBlockIndex());
-      console.log(this._editor);
     }
   }
 
   _onChangeInput(evt) {
     const tab = this.wrapper.querySelector(`.nav-item[data-tab-id="${this.id}-tab-${evt.currentTarget.dataset.index}"] button`);
-    console.log('new tab', tab);
     tab.textContent = evt.currentTarget.value;
+    evt.currentTarget.classList.remove('is-invalid');
   }
 
   _checkTabsCount() {
@@ -250,26 +244,14 @@ export default class Tabs {
     if (tabValidate(tabNames)) {
       return true;
     } else {
-      alert('Название вкладки обязательно к заполнению');
+      alert(errorMessage);
       return false;
     }
   }
 
   _createNewTab() {
-    // const navTabs = this.data.tabNames.length ? this.wrapper.querySelector('.nav-tabs') : t.createNavTabsWrapperTemplate();
-    // const tabContent = this.data.tabNames.length ? this.wrapper.querySelector('.tab-content') : t.createTabsContentWrapperTemplate();
-    // navTabs.insertAdjacentHTML('beforeend', t.createNavTabsItemTemplate('', this.count, this.id));
-    // tabContent.insertAdjacentHTML('beforeend', t.createTabContentItemTemplate(this.count, this.id));
-    // this._editor[`editor_${this.count}`] = new EditorJS({
-    //   holder: `${this.id}-content-${this.count}`,
-    //   tools: editorTools,
-    //   data: {}
-    // })
-    // this.wrapper.append(navTabs, tabContent);
     let navTabs = this.wrapper.querySelector('.nav-tabs');
     if (navTabs) {
-      console.log('tabs done');
-      // const navTabs = this.wrapper.querySelector('.nav-tabs');
       const tabContent = this.wrapper.querySelector('.tab-content');
       navTabs.insertAdjacentHTML('beforeend', t.createNavTabsItemTemplate('', this.count, this.id));
       tabContent.insertAdjacentHTML('beforeend', t.createTabContentItemTemplate(this.count, this.id));
@@ -279,7 +261,6 @@ export default class Tabs {
         data: {}
       })
     } else {
-      console.log('not tabs');
       navTabs = t.createNavTabsWrapperTemplate();
       const tabContent = t.createTabsContentWrapperTemplate();
       navTabs.insertAdjacentHTML('beforeend', t.createNavTabsItemTemplate('', this.count, this.id));
