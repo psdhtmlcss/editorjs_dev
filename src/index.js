@@ -5,12 +5,8 @@ import List from '@editorjs/list';
 import Embed from '@editorjs/embed';
 import SimpleImage from './simple-image/simple-image.js';
 import Tabs from './tabs/tabs.js';
+import Accordion from './accordion/accordion.js';
 import Table from 'editorjs-table';
-
-// const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-// console.log(tooltipTriggerList);
-// const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
-// console.log(tooltipList);
 
 const saveButton = document.querySelector('button');
 
@@ -41,6 +37,9 @@ const editor = new EditorJS({
     tabs: {
       class: Tabs,
     },
+    accordion: {
+      class: Accordion,
+    },
     table: {
       class: Table,
       inlineToolbar: true,
@@ -54,9 +53,9 @@ const editor = new EditorJS({
     time: 1552744582955,
     blocks: [
       {
-        type: "tabs",
+        type: "accordion",
         data: {
-          tabNames: ["Tab one", "Tab two", "Tab three"],
+          tabNames: ["Heading 1", "Heading 2", "Heading 3"],
           tabsContent: [
             // Первая вкладка
             {
@@ -137,42 +136,126 @@ const editor = new EditorJS({
           ]
         }
       },
-      {
-        "type" : "table",
-        "data" : {
-            "content" : [ ["Kine", "1 pcs", "100$"], ["Pigs", "3 pcs", "200$"], ["Chickens", "12 pcs", "150$"] ]
-          }
-      },
-      {
-        "type": "heading",
-        "data": {
-           "text": "Heading level 222",
-           "level": 2
-          }
-     },
-     {
-      "type": "paragraph",
-      "data": {
-         "text": "Hey. Meet the new Editor. On this page you can see it in action — try to edit this text. Source code of the page contains the example of connection and configuration."
-        }
-      },
-      {
-        "type": "paragraph",
-        "data": {
-           "text": "On this page you can see it in action — try to edit this text."
-          }
-      },
-      {
-        "type": "list",
-        "data": {
-           "style": "unordered",
-           "items": [
-              "It is a block-styled editor",
-              "It returns clean data output in JSON",
-              "Designed to be extendable and pluggable with a simple API"
-           ]
-        }
-     },
+      // {
+      //   type: "tabs",
+      //   data: {
+      //     tabNames: ["Tab one", "Tab two", "Tab three"],
+      //     tabsContent: [
+      //       // Первая вкладка
+      //       {
+      //         time: 1552744582955,
+      //         blocks: [
+      //           {
+      //             "type": "heading",
+      //             "data": {
+      //                "text": "Heading level 2",
+      //                "level": 2
+      //               }
+      //          },
+      //          {
+      //           "type": "paragraph",
+      //           "data": {
+      //              "text": "Hey. Meet the new Editor. On this page you can see it in action — try to edit this text. Source code of the page contains the example of connection and configuration."
+      //             }
+      //           },
+      //           {
+      //             "type": "paragraph",
+      //             "data": {
+      //                "text": "On this page you can see it in action — try to edit this text."
+      //               }
+      //           },
+      //           {
+      //             "type": "list",
+      //             "data": {
+      //                "style": "unordered",
+      //                "items": [
+      //                   "It is a block-styled editor",
+      //                   "It returns clean data output in JSON",
+      //                   "Designed to be extendable and pluggable with a simple API"
+      //                ]
+      //             }
+      //           },
+      //         ]
+      //       },
+      //       // Вторая вкладка
+      //       {
+      //         time: 1552744582955,
+      //         blocks: [
+      //           {
+      //             "type": "heading",
+      //             "data": {
+      //                "text": "Test test test",
+      //                "level": 2
+      //               }
+      //          },
+      //          {
+      //           "type": "paragraph",
+      //           "data": {
+      //              "text": "Hey. Meet the new Editor. On this page you can see it in action — try to edit this text. Source code of the page contains the example of connection and configuration."
+      //             }
+      //           },
+      //           {
+      //             "type": "list",
+      //             "data": {
+      //                "style": "ordered",
+      //                "items": [
+      //                   "It is a block-styled editor",
+      //                   "It returns clean data output in JSON",
+      //                   "Designed to be extendable and pluggable with a simple API",
+      //                   "Designed to be extendable and pluggable with a simple API",
+      //                   "Designed to be extendable and pluggable with a simple API",
+      //                   "Designed to be extendable and pluggable with a simple API",
+      //                   "Designed to be extendable and pluggable with a simple API",
+      //                ]
+      //             }
+      //           },
+
+      //         ]
+      //       },
+      //       // Третья вкладка
+      //       {
+      //         time: 1552744582955,
+      //         blocks: []
+      //       }
+      //     ]
+      //   }
+      // },
+      // {
+      //   "type" : "table",
+      //   "data" : {
+      //       "content" : [ ["Kine", "1 pcs", "100$"], ["Pigs", "3 pcs", "200$"], ["Chickens", "12 pcs", "150$"] ]
+      //     }
+      // },
+      // {
+      //   "type": "heading",
+      //   "data": {
+      //      "text": "Heading level 222",
+      //      "level": 2
+      //     }
+      // },
+      // {
+      //   "type": "paragraph",
+      //   "data": {
+      //    "text": "Hey. Meet the new Editor. On this page you can see it in action — try to edit this text. Source code of the page contains the example of connection and configuration."
+      //   }
+      // },
+      // {
+      //   "type": "paragraph",
+      //   "data": {
+      //      "text": "On this page you can see it in action — try to edit this text."
+      //     }
+      // },
+      // {
+      //   "type": "list",
+      //   "data": {
+      //      "style": "unordered",
+      //      "items": [
+      //         "It is a block-styled editor",
+      //         "It returns clean data output in JSON",
+      //         "Designed to be extendable and pluggable with a simple API"
+      //      ]
+      //   }
+      // },
     ],
     version: "2.11.10"
   }
