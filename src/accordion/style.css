@@ -1,0 +1,7 @@
+.ce-toolbar {
+  z-index: 5;
+}
+
+.accordion-wrapper .codex-editor__redactor {
+  padding-bottom: 0!important;
+}
