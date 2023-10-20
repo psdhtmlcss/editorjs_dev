@@ -5,7 +5,6 @@ import { nanoid } from 'nanoid';
 import { tabValidate } from './validate';
 import './style.css'
 
-
 import { editorTools } from './editorConfig';
 
 export default class Accordion {

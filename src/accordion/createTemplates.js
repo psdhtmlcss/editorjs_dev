@@ -32,7 +32,7 @@ export const createEditBlockInputTemplate = (count, name = '') => (
     <div class="mb-3">
       <label class="form-label">Heading</label>
       <div class="input-group">
-        <input type="text" class="form-control tab-input" data-index="${count}" tabindex="${count}" placeholder="Enter the tab name" value="${name}">
+        <input type="text" class="form-control tab-input" data-index="${count}" tabindex="${count}" placeholder="Enter the heading" value="${name}">
         <button class="btn btn-outline-secondary btn-delete-tab" tabindex="${count}" data-index="${count}" data-bs-toggle="tooltip" data-bs-title="Удалить вкладку и ее содержимое">${Icon.DELETE}</button>
       </div>
     </div>
